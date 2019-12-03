@@ -10,3 +10,8 @@ A arquitetura deste sistema é relativamente simples:
 - Os dados coletados e organizados em formato JSON são armazenados no banco de dados do sistema, um MongoDB(visto que os dados não são necessariamente iguais em estrutura), também rodando em Docker.
 - Finalmente, tendo os dados armazenados no banco, poderemos então servir uma API de consulta e pesquisa por categoria, preço e nome de produtos.
 
+## Execução
+Ainda em estágio de desenvolvimento, mas o crawler pode ser executado com
+```bash
+scrapy runspider ./ofertacrawler/ofertacrawler/spiders/oferta.py -a urlfile=<arquivo de urls separadas por linha> -o <arquivo de output>.json
+```
