@@ -8,7 +8,13 @@
 import scrapy
 
 
-class OfertaCrawlerItem(scrapy.Item):
+class Oferta(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    pass
+    dominio = scrapy.Field()
+    categoria = scrapy.Field()
+    titulo = scrapy.Field()
+    disponivel = scrapy.Field()
+    preco = scrapy.Field()
+    descricao = scrapy.Field()
+    caracteristicas = scrapy.Field()
