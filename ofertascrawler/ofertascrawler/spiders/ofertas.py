@@ -14,10 +14,15 @@ class OfertasSpider(scrapy.Spider):
     name = 'ofertas'
     allowed_domains = ['www.casasbahia.com.br', 'produto.mercadolivre.com.br', 'www.mercadolivre.com.br', 'www.magazineluiza.com.br']
 
-    def __init__(self, urlfile=None):
-        if urlfile:
+    def __init__(self, urlfile=None, user_agent=None):
+        if isinstance(urlfile, str):
             with open(urlfile, 'r') as urls:
                 self.start_urls = [url.strip() for url in urls.readlines()]
+        elif isinstance(urlfile, list):
+            self.start_urls = urlfile
+
+        if user_agent:
+            self.user_agent = user_agent
 
     def parse(self, response):
         if re.search(URL_CASAS_BAHIA, response.url):
@@ -142,7 +147,10 @@ class OfertasSpider(scrapy.Spider):
             item = Oferta()
 
             item['dominio'] = response.url.split('/')[2]
-            item['categoria'] = response.css('.vip-navigation-breadcrumb-list a::text').get().strip()
+            try:
+                item['categoria'] = response.css('.vip-navigation-breadcrumb-list a::text').get().strip()
+            except AttributeError:
+                item['categoria'] = None
             item['titulo'] = response.css('.item-title__primary::text').get().strip()
 
             preco_tag = response.css('.price-tag')
