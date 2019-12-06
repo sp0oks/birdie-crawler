@@ -68,9 +68,11 @@ TELNETCONSOLE_ENABLED = False
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'ofertacrawler.pipelines.OfertacrawlerPipeline': 300,
-#}
+MONGO_URI = 'mongodb://mongo:27017'
+MONGO_DATABASE = 'scrapy' 
+ITEM_PIPELINES = {
+    'ofertacrawler.pipelines.MongoDBPipeline': 300
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -90,7 +92,7 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = 3.0
 HTTPCACHE_ENABLED = True
 #HTTPCACHE_EXPIRATION_SECS = 0
 #HTTPCACHE_DIR = 'httpcache'
-HTTPCACHE_IGNORE_HTTP_CODES = [302]
+#HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # Settings for local item exports
