@@ -12,14 +12,14 @@ services:
         build: ./ofertascrawler
         depends_on:
             - mongo
-        volumes:
-            - ./ofertascrawler/.scrapy/:/ofertascrawler/.scrapy/
+#        volumes:
+#            - ./ofertascrawler/.scrapy/:/ofertascrawler/.scrapy/
         restart: always
     
-    flask:
-        build: ./flask-api
-        ports:
-            - "5000:5000"
-        depends_on:
-            - mongo
-        restart: always
+#    flask:
+#        build: ./flask-api
+#        ports:
+#            - "5000:5000"
+#        depends_on:
+#            - mongo
+#        restart: always

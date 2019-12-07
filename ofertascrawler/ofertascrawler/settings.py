@@ -71,16 +71,16 @@ TELNETCONSOLE_ENABLED = False
 MONGO_URI = 'mongodb://mongo:27017'
 MONGO_DATABASE = 'scrapy' 
 ITEM_PIPELINES = {
-    'ofertacrawler.pipelines.MongoDBPipeline': 300
+    'ofertascrawler.pipelines.MongoDBPipeline': 300
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 AUTOTHROTTLE_ENABLED = True
 # The initial download delay
-AUTOTHROTTLE_START_DELAY = 1
+#AUTOTHROTTLE_START_DELAY = 1
 # The maximum download delay to be set in case of high latencies
-AUTOTHROTTLE_MAX_DELAY = 5
+#AUTOTHROTTLE_MAX_DELAY = 5
 # The average number of requests Scrapy should be sending in parallel to
 # each remote server
 AUTOTHROTTLE_TARGET_CONCURRENCY = 3.0
@@ -89,13 +89,13 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = 3.0
 
 # Enable and configure HTTP caching (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
-HTTPCACHE_ENABLED = True
+#HTTPCACHE_ENABLED = True
 #HTTPCACHE_EXPIRATION_SECS = 0
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # Settings for local item exports
-FEED_URI = './data/results.json'
+FEED_URI = './data/scrapy/results.json'
 FEED_FORMAT = 'json'
 FEED_EXPORT_ENCODING = 'utf-8'
