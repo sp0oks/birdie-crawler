@@ -40,7 +40,6 @@ class OfertasSpider(scrapy.Spider):
         else:
             item = Oferta()
 
-            item['dominio'] = response.url.split('/')[2]
             item['url'] = response.url
             item['categoria'] = response.css('.breadcrumb a span::text').getall()[1]
             item['titulo'] = response.css('.produtoNome h1.name b::text').get()
@@ -74,7 +73,6 @@ class OfertasSpider(scrapy.Spider):
     def parse_magazine_luiza(self, response):
         item = Oferta()
 
-        item['dominio'] = response.url.split('/')[2]
         item['url'] = response.url
         item['disponivel'] = response.xpath('//meta[re:test(@content, "OutOfStock")]').get() is None
 
@@ -113,7 +111,6 @@ class OfertasSpider(scrapy.Spider):
     def parse_mercado_livre(self, response):
         item = Oferta()
 
-        item['dominio'] = response.url.split('/')[2]
         item['url'] = response.url
 
         try:
@@ -161,7 +158,6 @@ class OfertasSpider(scrapy.Spider):
     def parse_produto_mercado_livre(self, response):
         item = Oferta()
 
-        item['dominio'] = response.url.split('/')[2]
         item['url'] = response.url
         item['disponivel'] = True
 

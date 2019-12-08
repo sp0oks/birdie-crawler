@@ -11,7 +11,6 @@ import scrapy
 class Oferta(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    dominio = scrapy.Field()
     url = scrapy.Field()
     categoria = scrapy.Field()
     titulo = scrapy.Field()

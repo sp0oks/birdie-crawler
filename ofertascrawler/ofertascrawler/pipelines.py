@@ -35,7 +35,6 @@ class MongoDBPipeline(object):
         self.db[self.collection].find_one_and_replace(
                 {'url': item['url']},
                 {
-                    'dominio': item['dominio'],
                     'url': item['url'],
                     'categoria': item['categoria'],
                     'titulo': item['titulo'],
