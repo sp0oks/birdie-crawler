@@ -41,6 +41,7 @@ class OfertasSpider(scrapy.Spider):
             item = Oferta()
 
             item['dominio'] = response.url.split('/')[2]
+            item['url'] = response.url
             item['categoria'] = response.css('.breadcrumb a span::text').getall()[1]
             item['titulo'] = response.css('.produtoNome h1.name b::text').get()
 
@@ -49,8 +50,11 @@ class OfertasSpider(scrapy.Spider):
             else:
                 item['disponivel'] = True
                 preco_tag = response.css('#ctl00_Conteudo_ctl00_precoPorValue')
-                item['preco'] = ' '.join([preco_tag.css('::text').get(), preco_tag.css('i::text').get()])
-            
+                item['moeda'] = preco_tag.css('::text').get()
+                try:
+                    item['preco'] = preco_tag.css('i::text').get().replace('.', '').replace(',', '.')
+                except AttributeError:
+                    pass
             detalhes = response.css('.detalhesProduto')
             try:
                 item['descricao'] = detalhes.xpath('.//div[re:test(@class, "descricao")]/p/text()').get().strip()
@@ -71,6 +75,7 @@ class OfertasSpider(scrapy.Spider):
         item = Oferta()
 
         item['dominio'] = response.url.split('/')[2]
+        item['url'] = response.url
         item['disponivel'] = response.xpath('//meta[re:test(@content, "OutOfStock")]').get() is None
 
         item['categoria'] = None
@@ -84,8 +89,11 @@ class OfertasSpider(scrapy.Spider):
                 item['titulo'] = None
 
             preco_tag = response.css('.price-template-price-block')
-            item['preco'] = ' '.join([preco_tag.css('.price-template__bold::text').get(), preco_tag.css('.price-template__text::text').get()])
-
+            item['moeda'] = preco_tag.css('.price-template__bold::text').get()
+            try:
+                item['preco'] = preco_tag.css('.price-template__text::text').get().replace('.', '').replace(',', '.')
+            except AttributeError:
+                pass
         else:
             item['titulo'] = response.css('.header-product__title--unavailable::text').get().strip()
                 
@@ -106,7 +114,12 @@ class OfertasSpider(scrapy.Spider):
         item = Oferta()
 
         item['dominio'] = response.url.split('/')[2]
-        item['titulo'] = response.css('.ui-pdp-title::text').get().strip()
+        item['url'] = response.url
+
+        try:
+            item['titulo'] = response.css('.ui-pdp-title::text').get().strip()
+        except AttributeError:
+            pass
             
         try:
             item['categoria'] = response.css('.andes-breadcrumb__item a::text').get().strip()
@@ -118,13 +131,15 @@ class OfertasSpider(scrapy.Spider):
         item['preco'] = None
         if item['disponivel']:
             preco_tag = response.css('.price-tag')
-            # Se existe preço, é necessário checar se existe um valor em centavos no preço
-            if preco_tag.css('.price-tag-cents').get():
-                item['preco'] = ' '.join([preco_tag.css('.price-tag-symbol::text').get(), 
-                                  preco_tag.css('.price-tag-fraction::text').get() + ',' + preco_tag.css('.price-tag-cents::text').get()])
-            else:
-                item['preco'] = ' '.join([preco_tag.css('.price-tag-symbol::text').get(), preco_tag.css('.price-tag-fraction::text').get()])
-
+            item['moeda'] = preco_tag.css('.price-tag-symbol::text').get()
+            try:
+                # Se existe preço, é necessário checar se existe um valor em centavos no preço
+                if preco_tag.css('.price-tag-cents').get():
+                    item['preco'] = preco_tag.css('.price-tag-fraction::text').get().replace('.', '') + '.' + preco_tag.css('.price-tag-cents::text').get()
+                else:
+                    item['preco'] = preco_tag.css('.price-tag-fraction::text').get().replace('.', '')
+            except AttributeError:
+                pass
         # Captura descrição linha a linha, remove excesso de espaçamento e reordena por linha
         item['descricao'] = '\n'.join([line.strip() for line in response.css('.ui-pdp-description__content::text').getall()])
 
@@ -147,6 +162,9 @@ class OfertasSpider(scrapy.Spider):
         item = Oferta()
 
         item['dominio'] = response.url.split('/')[2]
+        item['url'] = response.url
+        item['disponivel'] = True
+
         try:
             item['categoria'] = response.css('.vip-navigation-breadcrumb-list a::text').get().strip()
         except AttributeError:
@@ -154,13 +172,15 @@ class OfertasSpider(scrapy.Spider):
         item['titulo'] = response.css('.item-title__primary::text').get().strip()
 
         preco_tag = response.css('.price-tag')
-        # É necessário checar se existe um valor em centavos no preço
-        if preco_tag.css('.price-tag-cents').get():
-            item['preco'] = ' '.join([preco_tag.css('.price-tag-symbol::text').get(), 
-                              preco_tag.css('.price-tag-fraction::text').get() + ',' + preco_tag.css('.price-tag-cents::text').get()])
-        else:
-            item['preco'] = ' '.join([preco_tag.css('.price-tag-symbol::text').get(), preco_tag.css('.price-tag-fraction::text').get()])
-
+        item['moeda'] = preco_tag.css('.price-tag-symbol::text').get()
+        try:
+            # É necessário checar se existe um valor em centavos no preço
+            if preco_tag.css('.price-tag-cents').get():
+                item['preco'] = preco_tag.css('.price-tag-fraction::text').get().replace('.', '') + '.' + preco_tag.css('.price-tag-cents::text').get()
+            else:
+                item['preco'] = preco_tag.css('.price-tag-fraction::text').get().replace('.', '')
+        except AttributeError:
+            pass
         # Captura descrição linha a linha, remove excesso de espaçamento e reordena por linha
         item['descricao'] = '\n'.join([line.strip() for line in response.css('.item-description__text p::text').getall()])
 

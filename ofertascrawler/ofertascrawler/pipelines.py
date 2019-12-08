@@ -6,7 +6,9 @@
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 
 import pymongo
+import bson
 
+from scrapy.exceptions import DropItem
 
 class MongoDBPipeline(object):
     collection = 'items'
@@ -17,8 +19,8 @@ class MongoDBPipeline(object):
 
     @classmethod
     def from_crawler(cls, crawler):
-        return cls(mongo_uri=crawler.settings.get('MONGO_URI'),
-                   db_name=crawler.settings.get('MONGO_DATABASE'))
+        return cls(mongo_uri=crawler.settings.get('MONGODB_URI'),
+                   db_name=crawler.settings.get('MONGODB_DATABASE'))
 
     def open_spider(self, spider):
         self.connection = pymongo.MongoClient(self.mongo_uri)
@@ -28,6 +30,20 @@ class MongoDBPipeline(object):
         self.connection.close()
 
     def process_item(self, item, spider):
-        self.db[self.collection].insert_one(dict(item))
+        if 'preco' not in item or 'titulo' not in item:
+            raise DropItem('Invalid item (required fields missing!): %s' % item)
+        self.db[self.collection].find_one_and_replace(
+                {'url': item['url']},
+                {
+                    'dominio': item['dominio'],
+                    'url': item['url'],
+                    'categoria': item['categoria'],
+                    'titulo': item['titulo'],
+                    'disponivel': item.get('disponivel', None),
+                    'moeda': item.get('moeda', 'R$'),
+                    'preco': bson.Decimal128(item['preco']),
+                    'descricao': item['descricao'],
+                    'caracteristicas': item['caracteristicas']
+                }, upsert=True)
         return item
- 
+

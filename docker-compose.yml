@@ -1,25 +1,24 @@
-version: '3'
+version: '3.7'
 
 services:
-    mongo:
+    mongodb:
         image: mvertes/alpine-mongo
         expose:
             - "27017"
         volumes:
             -  ./ofertascrawler/data/mongodb:/data/db
+        restart: always
 
     crawler:
         build: ./ofertascrawler
         depends_on:
-            - mongo
-#        volumes:
-#            - ./ofertascrawler/.scrapy/:/ofertascrawler/.scrapy/
+            - mongodb
+        restart: on-failure
+
+    flask:
+        build: ./flask-api
+        ports:
+            - "5000:5000"
+        depends_on:
+            - mongodb
         restart: always
-    
-#    flask:
-#        build: ./flask-api
-#        ports:
-#            - "5000:5000"
-#        depends_on:
-#            - mongo
-#        restart: always

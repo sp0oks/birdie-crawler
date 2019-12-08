@@ -30,8 +30,8 @@ CONCURRENT_REQUESTS = 16
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
 RANDOMIZE_DOWNLOAD_DELAY = True
-DOWNLOAD_DELAY = 2
-DOWNLOAD_TIMEOUT = 20
+DOWNLOAD_DELAY = 1
+DOWNLOAD_TIMEOUT = 30
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -68,19 +68,19 @@ TELNETCONSOLE_ENABLED = False
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-MONGO_URI = 'mongodb://mongo:27017'
-MONGO_DATABASE = 'scrapy' 
+MONGODB_URI = 'mongodb://mongodb:27017'
+MONGODB_DATABASE = 'scrapy'
 ITEM_PIPELINES = {
-    'ofertascrawler.pipelines.MongoDBPipeline': 300
+    'ofertascrawler.pipelines.MongoDBPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 AUTOTHROTTLE_ENABLED = True
 # The initial download delay
-#AUTOTHROTTLE_START_DELAY = 1
+AUTOTHROTTLE_START_DELAY = 1
 # The maximum download delay to be set in case of high latencies
-#AUTOTHROTTLE_MAX_DELAY = 5
+AUTOTHROTTLE_MAX_DELAY = 5.0
 # The average number of requests Scrapy should be sending in parallel to
 # each remote server
 AUTOTHROTTLE_TARGET_CONCURRENCY = 3.0
@@ -89,13 +89,13 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = 3.0
 
 # Enable and configure HTTP caching (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
-#HTTPCACHE_ENABLED = True
+HTTPCACHE_ENABLED = True
 #HTTPCACHE_EXPIRATION_SECS = 0
 #HTTPCACHE_DIR = 'httpcache'
-#HTTPCACHE_IGNORE_HTTP_CODES = []
+HTTPCACHE_IGNORE_HTTP_CODES = [301, 302]
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # Settings for local item exports
-FEED_URI = './data/scrapy/results.json'
-FEED_FORMAT = 'json'
-FEED_EXPORT_ENCODING = 'utf-8'
+#FEED_URI = './data/scrapy/results.json'
+#FEED_FORMAT = 'json'
+#FEED_EXPORT_ENCODING = 'utf-8'
