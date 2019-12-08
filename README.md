@@ -26,7 +26,7 @@ Não é necessário instalar nada além do `docker-compose` para executar o sist
 
 ## Execução
 O sistema pode ser executado por completo com `docker-compose up`, ou apenas alguns serviços com `docker-compose up <serviço>`.
-Para consultar a API, utilize os endpoints dados em `/`.
+Para consultar a API, utilize os endpoints dados em `localhost:5000/`.
 
 ## Benchmark
 Com a configuração default (1 processo e 8 spiders), foi possível coletar ~23.000 itens em média (de 40.000 urls) no período de 5 horas.
